@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+.trainer-card {
+    height: 380px;
+}
+
+.trainer-img {
+    height: 230px;
+    width: 100%;
+    object-fit: contain;
+    background-color: #f8f9fa;
+}
+</style>
+
+<div class="text-center mt-4">
+  <h3 class="mb-4">Entrenadores</h3>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-4 px-1">
+  <a href="{% url 'pokedex:index' %}" class="btn btn-secondary">Volver</a>
+
+  {% if user.is_authenticated %}
+  <div class="d-flex justify-content-end mb-3"></div>
+    <a href="{% url 'pokedex:add_trainer' %}" class="btn btn-link text-success">
+      <i class="fa-solid fa-user-plus"></i> Agregar Entrenador
+    </a>
+  {% endif %}
+</div>
+
+<div class="container">
+  <div class="row">
+    {% for trainer in trainers %}
+      <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+        <div class="card shadow-sm trainer-card">
+
+          {% if trainer.picture %}
+            <img src="{{ trainer.picture.url }}" class="card-img-top trainer-img" alt="{{ trainer.first_name }}">
+          {% else %}
+            <img src="{% static 'img/no-image.png' %}" class="card-img-top trainer-img" alt="Sin imagen">
+          {% endif %}
+
+          <div class="card-body text-center">
+            <h5 class="card-title">
+              <a href="{% url 'pokedex:trainer' trainer.id %}">
+                {{ trainer.first_name }} {{ trainer.last_name }}
+              </a>
+            </h5>
+
+            {% if user.is_authenticated %}
+              <div class="mt-3 d-flex justify-content-center gap-2">
+
+                <a href="{% url 'pokedex:trainer' trainer.id %}" class="btn btn-info btn-sm">
+                  <i class="fa-solid fa-eye"></i>
+                </a>
+
+                <a href="{% url 'pokedex:edit_trainer' trainer.id %}" class="btn btn-warning btn-sm">
+                  <i class="fa-solid fa-pencil"></i>
+                </a>
+
+                <a href="{% url 'pokedex:delete_trainer' trainer.id %}" class="btn btn-danger btn-sm">
+                  <i class="fa-solid fa-trash"></i>
+                </a>
+
+              </div>
+            {% endif %}
+          </div>
+
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12 text-center text-muted">No hay entrenadores registrados.</div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

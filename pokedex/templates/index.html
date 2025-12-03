@@ -1,11 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <p class="p-2 text-center">Bienvenido a tu Pokedex personal</p>
+  <div class="text-center mt-4">
+    <h3 class="mb-4">Pokemons</h3>
+  </div>
 
-  <h3>Pokemons</h3>
   {% if user.is_authenticated %}
-    <a href="{% url 'pokedex:add_pokemon' %}" class="btn btn-success mb-3">Agregar Pokémon</a>
+  <div class="d-flex justify-content-end mb-3">
+    <a href="{% url 'pokedex:add_pokemon' %}" class="btn btn-link text-success">
+      <i class="fa-solid fa-circle-plus"></i> Agregar Pokémon
+    </a>
+  </div>
   {% endif %}
 
   <div class="row">
@@ -15,10 +20,18 @@
           <img src="{{ pokemon.picture.url }}" class="card-img-top" alt="{{ pokemon.name }}" />
           <div class="card-body text-center">
             <h5 class="card-title">{{ pokemon.name|capfirst }}</h5>
-            <a href="{% url 'pokedex:pokemon' pokemon.id %}" class="btn btn-info btn-sm"><i class="fa-regular fa-eye"></i></a>
+
+            <a href="{% url 'pokedex:pokemon' pokemon.id %}" class="btn btn-info btn-sm">
+              <i class="fa-regular fa-eye"></i>
+            </a>
+
             {% if user.is_authenticated %}
-              <a href="{% url 'pokedex:edit_pokemon' pokemon.id %}" class="btn btn-warning btn-sm"><i class="fa-solid fa-pencil"></i></a>
-              <a href="{% url 'pokedex:delete_pokemon' pokemon.id %}" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></a>
+              <a href="{% url 'pokedex:edit_pokemon' pokemon.id %}" class="btn btn-warning btn-sm">
+                <i class="fa-solid fa-pencil"></i>
+              </a>
+              <a href="{% url 'pokedex:delete_pokemon' pokemon.id %}" class="btn btn-danger btn-sm">
+                <i class="fa-solid fa-trash"></i>
+              </a>
             {% endif %}
           </div>
         </div>
@@ -27,14 +40,4 @@
       <p class="text-muted">No hay pokemons registrados.</p>
     {% endfor %}
   </div>
-  <h3>Entrenadores</h3>
-  <ul class="list-group">
-    {% for trainer in trainers %}
-      <li class="list-group-item">
-        <a href="{% url 'pokedex:trainer' trainer.id %}">{{ trainer.first_name }} {{ trainer.last_name }}</a>
-      </li>
-    {% empty %}
-      <li class="list-group-item text-muted">No hay entrenadores registrados.</li>
-    {% endfor %}
-  </ul>
 {% endblock %}
