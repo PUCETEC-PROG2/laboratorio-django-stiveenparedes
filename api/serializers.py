@@ -25,22 +25,24 @@ class PokemonSerializer(serializers.ModelSerializer):
         return value
     
 class TrainerSerializer(serializers.ModelSerializer):
-
     picture = serializers.CharField(required=False, allow_null=True)
-    
+
     class Meta:
         model = Trainer
-        fields = '__all__'
+        fields = "__all__"
 
     def validate_picture(self, value):
-        if value:
+        if value and isinstance(value, str) and "base64" in value:
             try:
-                format, imgstr = value.split(';base64,')
-                ext = format.split('/')[-1]
+                format, imgstr = value.split(";base64,")
+                ext = format.split("/")[-1]
+
                 return ContentFile(
                     base64.b64decode(imgstr),
-                    name=f'trainer.{ext}'
+                    name=f"trainer.{ext}"
                 )
             except Exception:
-                raise serializers.ValidationError("La imagen no se encuentra con base64 válida.")
+                raise serializers.ValidationError(
+                    "La imagen no se encuentra con base64 válida."
+                )
         return value
